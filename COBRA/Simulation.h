@@ -32,6 +32,7 @@ public:
 
 	//save
 	void ShowTask();
+	//void ShowTask(std::ostream& out = std::cout); // Modified to accept output stream
 	void SavePath(const string &fname);
 	void SaveTask(const string &fname, const string &instance_name);
 	void SaveThroughput(const string &fname);
@@ -56,6 +57,9 @@ private:
 	
 	int workpoint_num; //number of endpoints that may have tasks on. Other endpoints are home endpoints
 	int t_task;//timestep that last task appears
+
+	//static void batch_run(const string& batch_input_file); // Add this declaration
+    //void ShowTask(std::ostream& out = std::cout); // Modified to accept output stream
 
 };
 

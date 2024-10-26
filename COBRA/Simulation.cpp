@@ -2,7 +2,8 @@
 #include <ctime>
 
 #include "Simulation.h"
-
+#include <fstream>
+#include <iostream>
 
 
 Simulation::Simulation(string map_name, string task_name)
@@ -127,7 +128,8 @@ void Simulation::LoadMap(string fname)
 }
 
 void Simulation::LoadTask(string fname)
-{
+{   
+	clock_t start_time = std::clock();
 
 	string line;
 	ifstream myfile(fname.c_str());
@@ -177,10 +179,14 @@ void Simulation::LoadTask(string fname)
 		}
 	}
 	*/
+	clock_t end_time = std::clock();
+	double duration = double(end_time - start_time) / CLOCKS_PER_SEC;
+	cout << "Time taken by LoadTask :" << duration << "seconds" << endl;
 }
 
 void Simulation::run_TOTP()
 {
+	clock_t start_time = std::clock();
 	cout << endl << "************TOTP************" << endl;
 
 	while (!token.tasks.empty() || token.timestep <= t_task)
@@ -242,9 +248,13 @@ void Simulation::run_TOTP()
 			system("PAUSE");
 		}*/
 	}
+	clock_t end_time = std::clock();
+	double duration = double(end_time - start_time) / CLOCKS_PER_SEC;
+	cout << "Time taken by run_TOTP:" << duration << "seconds" << endl;
 }
 void Simulation::run_TPTR()
-{
+{   
+	clock_t start_time = std::clock();
 	cout << endl << "************TPTR************" << endl;
 
 	while (!token.tasks.empty() || token.timestep <= t_task)
@@ -314,11 +324,61 @@ void Simulation::run_TPTR()
 			system("PAUSE");
 		}*/
 	} 
+	clock_t end_time = std::clock();
+	double duration = double(end_time - start_time) / CLOCKS_PER_SEC;
+	cout << "Time taken by run_TPTR:" << duration << "seconds" << endl;
 }
+
+/*void batch_run(const std::string& inputFilePath, const std::string& outputFilePath) {
+    std::ifstream inputFile(inputFilePath);
+    if (!inputFile.is_open()) {
+        std::cerr << "Error opening input file: " << inputFilePath << std::endl;
+        return;
+    }
+
+    // Open the output file in append mode to consolidate all outputs in a single file
+    std::ofstream outputFile(outputFilePath, std::ios::app);
+    if (!outputFile.is_open()) {
+        std::cerr << "Error opening output file: " << outputFilePath << std::endl;
+        return;
+    }
+
+    std::string line;
+    int batchNumber = 0;
+    // Read and process up to 5 lines from the input file
+    while (std::getline(inputFile, line) && batchNumber < 5) {
+        // Log the batch number to track each run
+        outputFile << "Batch Run #" << batchNumber + 1 << "\n";
+
+        // Create a Simulation object with the input line and output path
+        Simulation simulation(line, outputFilePath);
+
+        // Run the first part and save the path output
+        simulation.run_TOTP();
+        simulation.SavePath(outputFilePath + "_batch" + std::to_string(batchNumber) + "_tp_path");
+
+        // Run the second part and save the path output
+        simulation.run_TPTR();
+        simulation.SavePath(outputFilePath + "_batch" + std::to_string(batchNumber) + "_tptr_path");
+
+        // Show tasks (optional) - this will output to console, not the file
+        simulation.ShowTask();
+
+        // Separate outputs of each batch for readability
+        outputFile << "End of Batch Run #" << batchNumber + 1 << "\n\n";
+
+        ++batchNumber; // Increment batch counter
+    }
+
+    // Close files
+    inputFile.close();
+    outputFile.close();
+}*/
 
 
 void Simulation::ShowTask()
-{
+{	
+	clock_t start_time = std::clock();
 	unsigned int WaitingTime = 0;
 	unsigned int LastFinish = 0;
 	cout << endl << "TASK" << endl;
@@ -339,9 +399,14 @@ void Simulation::ShowTask()
 	}
 	cout << endl << "Finishing Timestep:	" << LastFinish << endl;
 	cout << "Sum of Task Waiting Time:	" << WaitingTime << endl;
+	clock_t end_time = std::clock();
+	double duration = double(end_time - start_time) / CLOCKS_PER_SEC;
+	cout << "Time taken by ShowTask :" << duration << "seconds" << endl;
 }
+
 void Simulation::SaveTask(const string &fname, const string &instance_name)
-{
+{	
+	clock_t start_time = std::clock();
 	// write output file
 	std::ofstream fout(fname, ios::app);
 	if (!fout) return;
@@ -367,9 +432,13 @@ void Simulation::SaveTask(const string &fname, const string &instance_name)
 	//fout << "Sum of Task Waiting Time:	" << WaitingTime << endl;
 	fout << instance_name << " " << LastFinish << " " << WaitingTime << " " << computation_time / (double)LastFinish << endl;
 	fout.close();
+	clock_t end_time = std::clock();
+	double duration = double(end_time - start_time) / CLOCKS_PER_SEC;
+	cout << "Time taken by SaveTask :" << duration << "seconds" << endl;
 }
 void Simulation::SaveThroughput(const string &fname)
-{
+{	
+	clock_t start_time = std::clock();
 	// write output file
 	std::ofstream fout(fname + ".throughput");
 	if (!fout) return;
@@ -406,9 +475,13 @@ void Simulation::SaveThroughput(const string &fname)
 		fout << thpts[i] << " " << inpts[i] << endl;
 	}
 	fout.close();
+	clock_t end_time = std::clock();
+	double duration = double(end_time - start_time) / CLOCKS_PER_SEC;
+	cout << "Time taken by SaveThroughput :" << duration << "seconds" << endl;
 }
 void Simulation::SavePath(const string &fname)
-{
+{	
+	clock_t start_time = std::clock();
 	// write output file
 	std::ofstream fout(fname);
 	if (!fout) return;
@@ -423,10 +496,14 @@ void Simulation::SavePath(const string &fname)
 		}
 	}
 	fout.close();
+	clock_t end_time = std::clock();
+	double duration = double(end_time - start_time) / CLOCKS_PER_SEC;
+	cout << "Time taken by SavePath :" << duration << "seconds" << endl;
 }
 
 bool Simulation::TestConstraints()// test vertex collision and edge collision
-{
+{   
+	clock_t start_time = std::clock();
 	for (unsigned int ag = 0; ag < agents.size(); ag++)
 	{
 		for (unsigned int i = ag + 1; i < agents.size(); i++)
@@ -449,5 +526,8 @@ bool Simulation::TestConstraints()// test vertex collision and edge collision
 			}
 		}
 	}
+	clock_t end_time = std::clock();
+	double duration = double(end_time - start_time) / CLOCKS_PER_SEC;
+	cout << "Time taken by TestConstraints :" << duration << "seconds" << endl;
 	return true;
 }

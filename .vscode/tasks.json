@@ -1,0 +1,26 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "C/C++: gcc build active file",
+            "command": "/usr/bin/g++",    // Use g++ for C++ code
+            "args": [
+                "${workspaceFolder}/COBRA/*.cpp",    // Compile all .cpp files in the COBRA folder
+                "-o",
+                "${workspaceFolder}/build/main"    // Output executable path
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"    // Ensure it's the workspace folder, not fileDirname
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Task generated for building COBRA project."
+        }
+    ]
+}
